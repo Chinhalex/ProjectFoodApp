@@ -15,10 +15,17 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.FirebaseDatabase;
 
 
 public class RegisterApp extends AppCompatActivity implements View.OnClickListener{
 
+    private FirebaseAuth mAuth;
     private EditText reg_email,reg_pass,reg_name,reg_phone;
     private ImageView reg_back;
     private TextView ok_register,reg_login_ima;
@@ -29,6 +36,7 @@ public class RegisterApp extends AppCompatActivity implements View.OnClickListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_app);
 
+        mAuth = FirebaseAuth.getInstance();
 
         reg_back=(ImageView) this.findViewById(R.id.reg_back);
         reg_back.setOnClickListener(this);
@@ -38,6 +46,8 @@ public class RegisterApp extends AppCompatActivity implements View.OnClickListen
 
         reg_login_ima=(TextView) this.findViewById(R.id.reg_login_ima);
         reg_login_ima.setOnClickListener(this);
+
+        progressBar=(ProgressBar) this.findViewById(R.id.progressBar);
 
         reg_name=(EditText) this.findViewById(R.id.reg_name);
         reg_phone=(EditText) this.findViewById(R.id.reg_phone);
@@ -51,10 +61,21 @@ public class RegisterApp extends AppCompatActivity implements View.OnClickListen
         switch (v.getId())
         {
             case  R.id.reg_back  :
-                startActivity(new Intent(this,Login.class));
+                Intent intent = new Intent(RegisterApp.this,Login.class);
+
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+                finish();
                 break;
             case R.id.reg_login_ima :
-                startActivity(new Intent(this,Login.class));
+                Intent intent2 = new Intent(RegisterApp.this,Login.class);
+
+                intent2.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent2);
+                finish();
+
                 break;
             case R.id.ok_register:
                 registerUser();
@@ -108,38 +129,55 @@ public class RegisterApp extends AppCompatActivity implements View.OnClickListen
             return;
         }
 
+        else
+        {
+            progressBar.setVisibility(View.VISIBLE);
+            mAuth.createUserWithEmailAndPassword(email,pass)
+                    .addOnCompleteListener(RegisterApp.this,new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if(task.isSuccessful())
+                            {
 
-//        mAuth.createUserWithEmailAndPassword(email,pass)
-//                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<AuthResult> task) {
-//                        if(task.isSuccessful())
-//                        {
-//                            User user = new User (email);
-//                            DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("users");
-//                            String userId = mDatabase.push().getKey();
-//
-//                            mDatabase.child(userId).setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
-//                                @Override
-//                                public void onComplete(@NonNull Task<Void> task) {
-//                                    if(task.isSuccessful())
-//                                    {
-//                                        Toast.makeText(Register.this,"Corrected to register User!",Toast.LENGTH_LONG).show();
-//
-//                                    }
-//                                    else {
-//                                        Toast.makeText(Register.this,"Failed to register User!",Toast.LENGTH_LONG).show();
-//
-//                                    }
-//                                }
-//                            });
-//
-//                        }
-//                        else
-//                        {
-//                            Toast.makeText(Register.this,"Fail to register User!",Toast.LENGTH_LONG).show();
-//                        }
-//                    }
-//                });
+                                FirebaseUser firebaseUser = mAuth.getCurrentUser();
+                                User user = new User(name,phone,email,pass);
+                                FirebaseDatabase.getInstance().getReference("Users")
+                                        .child(firebaseUser.getUid())
+                                        .setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if(task.isSuccessful())
+                                        {
+                                            progressBar.setVisibility(View.GONE);
+                                            firebaseUser.sendEmailVerification();
+
+                                            Toast.makeText(RegisterApp.this,"User has been registered successfully, please verify your email!",Toast.LENGTH_LONG).show();
+
+                                            Intent intent = new Intent(RegisterApp.this,Main.class);
+
+                                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK
+                                            | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                            startActivity(intent);
+                                            finish();
+                                        }
+                                        else
+                                        {
+                                            progressBar.setVisibility(View.GONE);
+                                            Toast.makeText(RegisterApp.this,"Failed to register User!",Toast.LENGTH_LONG).show();
+                                        }
+                                    }
+                                });
+
+
+
+                            }
+                            else
+                            {
+                                Toast.makeText(RegisterApp.this,"Failed to register User !",Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    });
+        }
+
     }
 }
