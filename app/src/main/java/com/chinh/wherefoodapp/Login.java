@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,11 +17,10 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.FirebaseDatabase;
 
 public class Login extends AppCompatActivity implements View.OnClickListener{
 
-    private TextView register,login;
+    private TextView register,login,log_forget;
     private FirebaseAuth mAuth;
     private EditText edt_email,edt_pass;
     private ProgressBar progressBar;
@@ -31,18 +29,20 @@ public class Login extends AppCompatActivity implements View.OnClickListener{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_login);
 
         mAuth = FirebaseAuth.getInstance();
 
         register = (TextView) this.findViewById(R.id.log_register);
         login = (TextView) this.findViewById(R.id.log_login);
+        log_forget = (TextView) this.findViewById(R.id.log_forget);
         edt_email =(EditText)this.findViewById(R.id.edt_email);
         edt_pass =(EditText)this.findViewById(R.id.edt_pass);
         progressBar=(ProgressBar) this.findViewById(R.id.progressBar);
 
         register.setOnClickListener(this);
         login.setOnClickListener(this);
+        log_forget.setOnClickListener(this);
     }
 
     @Override
@@ -58,6 +58,10 @@ public class Login extends AppCompatActivity implements View.OnClickListener{
                 break;
             case R.id.log_login:
                 funcLogin();
+                break;
+
+            case R.id.log_forget:
+                startActivity(new Intent(Login.this, ForgetActivity.class));
                 break;
 
         }
@@ -108,7 +112,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener{
                                     progressBar.setVisibility(View.GONE);
                                     Toast.makeText(Login.this,"Login successfully",Toast.LENGTH_LONG).show();
 
-                                    Intent intent = new Intent(Login.this,Main.class);
+                                    Intent intent = new Intent(Login.this, MainActivity.class);
 
                                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK
                                             | Intent.FLAG_ACTIVITY_NEW_TASK);

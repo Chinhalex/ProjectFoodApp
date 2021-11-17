@@ -19,4 +19,11 @@
     <color name="gray">#EAE5E3</color>
 
     <color name="orangeMid">#F4511E</color>
+<!--   add color -->
+    <color name="primaryColor">#12A058</color>
+    <color name="primaryDarkColor">#12A058</color>
+    <color name="accentColor">#12A058</color>
+    <color name="textColor">#FFFFFF</color>
+    <color name="itemTextColor">#707070</color>
+    <color name="transparentColor" >#00FFFFFF</color>
 </resources>

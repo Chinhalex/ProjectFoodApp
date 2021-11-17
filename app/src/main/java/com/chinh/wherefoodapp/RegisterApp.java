@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.EditText;
@@ -15,6 +14,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.chinh.wherefoodapp.Utility.LoadingDialog;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -30,11 +30,14 @@ public class RegisterApp extends AppCompatActivity implements View.OnClickListen
     private ImageView reg_back;
     private TextView ok_register,reg_login_ima;
     private ProgressBar progressBar;
+    private LoadingDialog loadingDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_app);
+
+        loadingDialog = new LoadingDialog(this);
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -54,6 +57,7 @@ public class RegisterApp extends AppCompatActivity implements View.OnClickListen
         reg_email=(EditText) this.findViewById(R.id.reg_email);
         reg_pass=(EditText) this.findViewById(R.id.reg_pass);
 
+
     }
 
     @Override
@@ -61,16 +65,11 @@ public class RegisterApp extends AppCompatActivity implements View.OnClickListen
         switch (v.getId())
         {
             case  R.id.reg_back  :
-                Intent intent = new Intent(RegisterApp.this,Login.class);
 
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK
-                        | Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
-                finish();
-                break;
+                onBackPressed();  // function call back prevous Intent
+
             case R.id.reg_login_ima :
                 Intent intent2 = new Intent(RegisterApp.this,Login.class);
-
                 intent2.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK
                         | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent2);
@@ -131,7 +130,7 @@ public class RegisterApp extends AppCompatActivity implements View.OnClickListen
 
         else
         {
-            progressBar.setVisibility(View.VISIBLE);
+            loadingDialog.StartLoading();
             mAuth.createUserWithEmailAndPassword(email,pass)
                     .addOnCompleteListener(RegisterApp.this,new OnCompleteListener<AuthResult>() {
                         @Override
@@ -148,21 +147,22 @@ public class RegisterApp extends AppCompatActivity implements View.OnClickListen
                                     public void onComplete(@NonNull Task<Void> task) {
                                         if(task.isSuccessful())
                                         {
-                                            progressBar.setVisibility(View.GONE);
+                                            loadingDialog.stopLoading();
                                             firebaseUser.sendEmailVerification();
 
                                             Toast.makeText(RegisterApp.this,"User has been registered successfully, please verify your email!",Toast.LENGTH_LONG).show();
 
-                                            Intent intent = new Intent(RegisterApp.this,Main.class);
+                                            Intent intent = new Intent(RegisterApp.this, MainActivity.class);
 
                                             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK
-                                            | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                                    | Intent.FLAG_ACTIVITY_NEW_TASK);
+
                                             startActivity(intent);
                                             finish();
                                         }
                                         else
                                         {
-                                            progressBar.setVisibility(View.GONE);
+                                            loadingDialog.stopLoading();
                                             Toast.makeText(RegisterApp.this,"Failed to register User!",Toast.LENGTH_LONG).show();
                                         }
                                     }
@@ -173,6 +173,7 @@ public class RegisterApp extends AppCompatActivity implements View.OnClickListen
                             }
                             else
                             {
+                                loadingDialog.stopLoading();
                                 Toast.makeText(RegisterApp.this,"Failed to register User !",Toast.LENGTH_LONG).show();
                             }
                         }

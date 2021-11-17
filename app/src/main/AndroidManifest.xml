@@ -2,6 +2,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.chinh.wherefoodapp">
 
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -10,10 +16,26 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.WhereFoodApp">
         <activity
-            android:name=".Main"
+            android:name=".FoodRestaurantActivity"
+            android:exported="false" />
+        <activity
+            android:name=".DirectionActivity"
+            android:exported="false"
+            android:theme="@style/Theme.MaterialComponents.DayNight.DarkActionBar" />
+        <activity
+            android:name=".ForgetActivity"
+            android:exported="true" />
+        <activity
+            android:name=".RegisterApp"
             android:exported="true" />
         <activity
             android:name=".Login"
+            android:exported="true" />
+        <activity
+            android:name=".MainActivity"
+            android:exported="true" />
+        <activity
+            android:name=".SplashActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -21,9 +43,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".RegisterApp"
-            android:exported="true" />
+
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/API_KEY" />
     </application>
 
 </manifest>
