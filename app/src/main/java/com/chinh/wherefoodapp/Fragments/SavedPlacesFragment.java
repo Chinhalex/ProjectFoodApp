@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.SnapHelper;
 
 
 import com.chinh.wherefoodapp.DirectionActivity;
+import com.chinh.wherefoodapp.FoodRestaurantActivity;
 import com.chinh.wherefoodapp.R;
 import com.chinh.wherefoodapp.SavedLocationInterface;
 import com.chinh.wherefoodapp.SavedPlaceModel;
@@ -142,6 +143,21 @@ public class SavedPlacesFragment extends Fragment implements SavedLocationInterf
 
         } else {
             Toast.makeText(requireContext(), "Location Not Found", Toast.LENGTH_SHORT).show();
+        }
+
+    }
+    @Override
+    public void onOrderClick(SavedPlaceModel savedPlaceModel) {
+
+        if (savedPlaceModel.getLat() != null && savedPlaceModel.getLng() != null) {
+            Intent intent = new Intent(requireContext(), FoodRestaurantActivity.class);
+            intent.putExtra("name", savedPlaceModel.getName());
+            intent.putExtra("address",savedPlaceModel.getAddress());
+
+            startActivity(intent);
+
+        } else {
+            Toast.makeText(requireContext(), "Not Found", Toast.LENGTH_SHORT).show();
         }
 
     }

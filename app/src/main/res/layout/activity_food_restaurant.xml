@@ -41,7 +41,7 @@
             android:layout_marginTop="10dp"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="asdgahsyd"
+            android:text="Seafood restaurant"
             android:textColor="@color/quantum_black_text"
             android:textStyle="bold" />
 
@@ -84,7 +84,7 @@
             android:layout_marginTop="10dp"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="asdgahsyd"
+            android:text="xóm 2 hưng trung nghệ an"
             android:textColor="@color/quantum_black_text"
             android:textStyle="bold" />
 

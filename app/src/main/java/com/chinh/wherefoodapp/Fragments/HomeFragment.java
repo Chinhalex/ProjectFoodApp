@@ -658,7 +658,6 @@ public class HomeFragment<onOrderFoodClick> extends Fragment implements OnMapRea
     }
 
 
-
     private void getUserSavedLocations() {
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users")
                 .child(firebaseAuth.getUid()).child("Saved Locations");
